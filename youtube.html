@@ -45,6 +45,9 @@
 
       <div class="jumbotron">
 
+        <div id="ytapiplayer">
+        </div>
+
         <h1><div id="timer"><span class="value">00:00:00.000</span></div></h1>
         <p><a id="start_button" class="btn btn-lg btn-success disabled" href="#" role="button" onclick="play()">Start</a></p>
       </div>
@@ -58,21 +61,27 @@
     <script>
 
     var stopWatch = new jtl.stopWatch();
-    var main_audio = null;
+
+    function onYouTubePlayerReady(playerId) {
+        ytplayer = document.getElementById("myytplayer");
+        ytplayer.addEventListener("onStateChange", "onytplayerStateChange");
+        $('#start_button').removeClass('disabled');
+    }
 
     function init(){
 
+        var youtube_id = 'ldKUeOV9Gms';
         var base = 5;
         var rand = randomFromTo(1, 40);
         var start = 5;
         var end = base + rand;
 
-        console.log('constant:', base, rand, start, end);
+        console.log('constant:', base, rand, start, end, youtube_id);
 
-        main_audio = new Audio('mi_demo.mp3#t='+start+','+end);
-        main_audio.addEventListener('pause', onPlayerStateChange, false);
-
-        $('#start_button').removeClass('disabled');
+        var params = { allowScriptAccess: "always" };
+        var atts = { id: "myytplayer" };
+        swfobject.embedSWF("http://www.youtube.com/v/"+youtube_id+"?enablejsapi=1&playerapiid=ytplayer&start="+start+"&end="+end,
+                           "ytapiplayer", "0", "0", "8", null, null, params, atts);
 
     }
 
@@ -80,14 +89,10 @@
 
 
     function play() {
-        console.log('playing', main_audio);
-
-        if(main_audio==null){
-            alert('Error');
-            return;
+        if (ytplayer) {
+            $('#start_button').addClass('disabled');
+            ytplayer.playVideo();
         }
-
-        main_audio.play();
 
         if(stopWatch.start()!=null){
             stopWatch.executeOnRefresh(refresh);
@@ -104,13 +109,14 @@
         stopWatch.resettime();
     }
 
-    function onPlayerStateChange(newState) {
-        console.log('newState', newState);
-
-        stop();
-        beep();
-        init();
-        
+    function onytplayerStateChange(newState) {
+        switch(newState){
+            case 0:
+                stop();
+                beep();
+                init();
+                break;
+        }
     }
 
     function beep(){

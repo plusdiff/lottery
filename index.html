@@ -70,7 +70,8 @@
 
     function init(){
 
-        var base = 20;
+        var youtube_id = 'ldKUeOV9Gms';
+        var base = 5;
         var rand = randomFromTo(1, 40);
         var start = 5;
         var end = base + rand;
@@ -79,8 +80,8 @@
 
         var params = { allowScriptAccess: "always" };
         var atts = { id: "myytplayer" };
-        swfobject.embedSWF("http://www.youtube.com/v/ldKUeOV9Gms?enablejsapi=1&playerapiid=ytplayer&start="+start+"&end="+end,
-                           "ytapiplayer", "200", "200", "8", null, null, params, atts);
+        swfobject.embedSWF("http://www.youtube.com/v/"+youtube_id+"?enablejsapi=1&playerapiid=ytplayer&start="+start+"&end="+end,
+                           "ytapiplayer", "0", "0", "8", null, null, params, atts);
 
     }
 
@@ -105,6 +106,7 @@
     	if(value==null)return;
     	$('#timer').find('.value').text(toTime(value));
         $('#start_button').removeClass('disabled');
+        stopWatch.resettime();
     }
 
     function onytplayerStateChange(newState) {

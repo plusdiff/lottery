@@ -56,38 +56,29 @@
     </div> <!-- /container -->
 
     <script>
+    "use strict";
 
     var stopWatch = new jtl.stopWatch();
-    var main_audio = null;
+    var main_audio = new Audio('mi_demo.mp3');
+    var start = 5;
+    var base = 5;
+    var end = 0;
 
     function init(){
+        end = base + randomFromTo(1, 40);
 
-        var base = 5;
-        var rand = randomFromTo(1, 40);
-        var start = 5;
-        var end = base + rand;
-
-        console.log('constant:', base, rand, start, end);
-
-        main_audio = new Audio('mi_demo.mp3#t='+start+','+end);
-        main_audio.addEventListener('pause', onPlayerStateChange, false);
-
-        $('#start_button').removeClass('disabled');
-
+        main_audio.addEventListener('pause', onPause, false);
+        main_audio.addEventListener('loadeddata', onLoadedData, false);
+        main_audio.addEventListener('timeupdate', onTimeUpdate, false);
     }
 
     init();
-
 
     function play() {
         console.log('playing', main_audio);
         $('#start_button').addClass('disabled');
 
-        if(main_audio==null){
-            alert('Error');
-            return;
-        }
-
+        main_audio.currentTime = start;
         main_audio.play();
 
         if(stopWatch.start()!=null){
@@ -105,13 +96,26 @@
         stopWatch.resettime();
     }
 
-    function onPlayerStateChange(newState) {
-        console.log('newState', newState);
+    function onTimeUpdate(event){
+        // console.log('onTimeUpdate', event);
+
+        if (end && main_audio.currentTime >= end) {
+            main_audio.pause();
+        }
+    }
+
+    function onLoadedData(event){
+        // console.log('onLoadedData', event);
+
+        $('#start_button').removeClass('disabled');
+    }
+
+    function onPause(event) {
+        // console.log('onPause', event);
 
         stop();
         beep();
         init();
-
     }
 
     function beep(){

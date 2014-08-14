@@ -60,6 +60,7 @@
 
     var stopWatch = new jtl.stopWatch();
     var main_audio = new Audio('mi_demo.mp3');
+    var honk_audio = new Audio('honk.mp3');
     var start = 5;
     var base = 5;
     var end = 0;
@@ -119,8 +120,7 @@
     }
 
     function beep(){
-        var audio = new Audio('honk.mp3');
-        audio.play();
+        honk_audio.play();
     }
 
     function toTime(_time){

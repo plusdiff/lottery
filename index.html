@@ -50,7 +50,7 @@
       </div>
 
       <div class="footer">
-        <p>&copy; +diff 2014</p>
+        <p>&copy; +diff 2014 <span><input id="tick" type="checkbox" /> tick to win</span></p>
       </div>
 
     </div> <!-- /container -->
@@ -61,6 +61,7 @@
     var stopWatch = new jtl.stopWatch();
     var main_audio = new Audio('mi_demo.mp3');
     var honk_audio = new Audio('honk.mp3');
+    var bingo_audio = new Audio('bingo.wav');
     var start = 5;
     var base = 5;
     var end = 0;
@@ -120,7 +121,12 @@
     }
 
     function beep(){
-        honk_audio.play();
+        var is_checked = $('#tick').prop('checked');
+        if(is_checked){
+            bingo_audio.play();
+        }else{
+            honk_audio.play();
+        }
     }
 
     function toTime(_time){
